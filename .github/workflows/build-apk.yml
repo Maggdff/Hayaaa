@@ -30,6 +30,11 @@ jobs:
             echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
           fi
 
+      - name: Update Gradle wrapper to 8.3
+        run: |
+          sed -i 's#distributionUrl=.*#distributionUrl=https\\://services.gradle.org/distributions/gradle-8.3-all.zip#' android/gradle/wrapper/gradle-wrapper.properties
+          cat android/gradle/wrapper/gradle-wrapper.properties
+
       - run: flutter pub get
 
       - run: flutter build apk --release
