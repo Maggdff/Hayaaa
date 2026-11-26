@@ -37,6 +37,27 @@ jobs:
 
       - run: flutter pub get
 
+      - name: Patch plugins missing namespace
+        run: |
+          python3 - <<'PY'
+          import re, glob, os
+          root = os.environ.get("PUB_CACHE", os.path.expanduser("~/.pub-cache"))
+          for gf in glob.glob(root + "/hosted/*/*/android/build.gradle"):
+              s = open(gf).read()
+              if "namespace" in s:
+                  continue
+              mf = os.path.join(os.path.dirname(gf), "src/main/AndroidManifest.xml")
+              if not os.path.exists(mf):
+                  continue
+              m = re.search(r'package="([^"]+)"', open(mf).read())
+              if not m:
+                  continue
+              s2 = re.sub(r"(\nandroid\s*\{)", lambda x: x.group(1) + '\n    namespace "' + m.group(1) + '"', s, count=1)
+              if s2 != s:
+                  open(gf, "w").write(s2)
+                  print("patched", gf, m.group(1))
+          PY
+
       - run: flutter build apk --release
 
       - uses: actions/upload-artifact@v4
