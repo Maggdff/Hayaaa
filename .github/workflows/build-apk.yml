@@ -75,6 +75,14 @@ jobs:
                   print("patched", gf)
           PY
 
+      - name: Fix flutter_local_notifications bigLargeIcon ambiguity
+        run: |
+          f=$(find "$PUB_CACHE/hosted" -path "*flutter_local_notifications-*" -name FlutterLocalNotificationsPlugin.java)
+          for x in $f; do
+            sed -i 's/bigPictureStyle\.bigLargeIcon(null);/bigPictureStyle.bigLargeIcon((android.graphics.Bitmap) null);/' "$x"
+            grep -n "bigLargeIcon" "$x"
+          done
+
       - run: flutter build apk --release
 
       - uses: actions/upload-artifact@v4
