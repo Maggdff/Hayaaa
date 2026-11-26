@@ -14,8 +14,8 @@ class SplashView extends StatefulWidget {
 class _SplashViewState extends State<SplashView> {
   @override
   void initState() {
-    delayAndNavigate(context);
     super.initState();
+    delayAndNavigate(context);
   }
 
   @override
