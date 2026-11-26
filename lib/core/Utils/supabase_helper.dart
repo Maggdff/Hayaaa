@@ -9,14 +9,14 @@ class SupabaseHelper {
   // Supply the public anon key at build time. Never place a service_role key
   // in a mobile application: APK contents can be extracted by anyone.
   static const String supabaseKey =
-      String.fromEnvironment('SUPABASE_ANON_KEY');
+      String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
 
   static const String bucketName = 'images';
 
   static void _ensureConfigured() {
     if (supabaseKey.isEmpty) {
       throw StateError(
-        'Supabase is not configured. Set the SUPABASE_ANON_KEY build secret.',
+        'Supabase is not configured. Set the SUPABASE_PUBLISHABLE_KEY build secret.',
       );
     }
   }
@@ -32,7 +32,6 @@ class SupabaseHelper {
       uri,
       headers: {
         'apikey': supabaseKey,
-        'Authorization': 'Bearer $supabaseKey',
         'Content-Type': 'image/jpeg',
         'x-upsert': 'false',
       },
