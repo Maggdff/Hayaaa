@@ -5,6 +5,10 @@ on:
   push:
     branches: ["**"]
 
+concurrency:
+  group: hayaa-apk-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
