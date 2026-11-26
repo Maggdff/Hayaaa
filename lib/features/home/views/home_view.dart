@@ -36,18 +36,20 @@ class _HomeViewState extends State<HomeView> {
     initInfo();
     setDeviceToken();
   }
-  void setDeviceToken() async {
+  Future<void> setDeviceToken() async {
     try {
-      fcm.getToken().then((value) {
-        final docRef = _firestore.collection("user").doc(_auth.currentUser!.uid);
-        final updates = <String, dynamic>{
-          "devicetoken": value,
-        };
-        docRef.update(updates);
-        print('Update Token \n new Token is $value');
+      final uid = _auth.currentUser?.uid;
+      if (uid == null) return;
+
+      final token = await fcm.getToken();
+      if (token == null) return;
+
+      await _firestore.collection('user').doc(uid).update({
+        'devicetoken': token,
       });
-    } catch (e) {
-      print(e);
+      debugPrint('FCM device token updated.');
+    } catch (error) {
+      debugPrint('Could not update FCM device token: $error');
     }
   }
   void _getPermesion()async{
