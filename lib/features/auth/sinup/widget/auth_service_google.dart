@@ -12,6 +12,7 @@ class AuthServiceGoogle {
   final Random _random = Random();
 
   Future<UserCredential?> signInWithGoogle() async {
+    var firebaseSignInCompleted = false;
     try {
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -35,6 +36,7 @@ class AuthServiceGoogle {
 
       final UserCredential userCredential =
           await _auth.signInWithCredential(credential);
+      firebaseSignInCompleted = true;
 
       final User? user = userCredential.user;
       if (user == null) {
@@ -91,7 +93,7 @@ class AuthServiceGoogle {
 
       // Do not leave an authenticated session behind if profile setup failed.
       try {
-        if (_auth.currentUser != null) {
+        if (firebaseSignInCompleted && _auth.currentUser != null) {
           await _auth.signOut();
         }
       } catch (signOutError) {
