@@ -1,40 +1,38 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hayaa_main/features/home/views/home_view.dart';
 
-import '../../auth/choice between registration and login/views/choice_between_registration_and_login_view.dart';
+import '../../auth/guest/guest_auth.dart';
 
-Future<void> delayAndNavigate(BuildContext context) async {
-  await Future.delayed(const Duration(seconds: 4));
-  if (!context.mounted) return;
-
-  final auth = FirebaseAuth.instance;
-  final user = auth.currentUser;
-
-  if (user != null) {
-    try {
-      final profile = await FirebaseFirestore.instance
-          .collection('user')
-          .doc(user.uid)
-          .get();
-
-      if (!profile.exists) {
-        await auth.signOut();
-      }
-    } catch (error) {
-      debugPrint('Could not verify the signed-in user profile: $error');
-    }
+Future<void> delayAndNavigate(BuildContext context,
+    {bool withDelay = true}) async {
+  if (withDelay) {
+    await Future.delayed(const Duration(seconds: 4));
   }
-
   if (!context.mounted) return;
 
-  if (auth.currentUser != null) {
-    Navigator.pushReplacementNamed(context, HomeView.id);
-  } else {
-    Navigator.pushReplacementNamed(
-      context,
-      ChoiceBetweenRegistrationAndLogin.id,
+  try {
+    await ensureGuestSession();
+  } catch (error) {
+    debugPrint('Guest session failed: $error');
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('تعذر الدخول'),
+        content: Text('$error'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: const Text('إعادة المحاولة'),
+          ),
+        ],
+      ),
     );
+    if (!context.mounted) return;
+    return delayAndNavigate(context, withDelay: false);
   }
+
+  if (!context.mounted) return;
+  Navigator.pushReplacementNamed(context, HomeView.id);
 }
