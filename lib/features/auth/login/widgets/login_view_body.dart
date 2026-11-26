@@ -22,7 +22,7 @@ class LoginViewBody extends StatefulWidget {
 class _LoginViewBodyState extends State<LoginViewBody> {
   GlobalKey<FormState> formkey = GlobalKey();
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-  late String phoneNum;
+  late String email;
   late String password;
   bool _loading = false;
 
@@ -77,8 +77,16 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                             autovalidateMode: autovalidateMode,
                             fieldIcon: const Icon(Icons.contact_phone_outlined),
                             fielldRatio: 0.8,
-                            hintText: "رقم الهاتف".tr(args: ['رقم الهاتف']),
-                            onSaved: (value) { phoneNum = value!; },
+                            hintText: "البريد الإلكتروني".tr(args: ['البريد الإلكتروني']),
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              final input = value?.trim() ?? '';
+                              if (input.isEmpty || !input.contains('@')) {
+                                return 'أدخل بريداً إلكترونياً صحيحاً';
+                              }
+                              return null;
+                            },
+                            onSaved: (value) { email = value!.trim(); },
                           ),
                         ],
                       ),
@@ -89,6 +97,13 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                         fieldIcon: const Icon(Icons.verified_user_outlined),
                         fielldRatio: 0.8,
                         hintText: "كلمة المرور".tr(args: ['كلمة المرور']),
+                        obscureText: true,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'أدخل كلمة المرور';
+                          }
+                          return null;
+                        },
                         onSaved: (value) { password = value!; },
                       ),
                       const SizedBox(height: 30),
@@ -96,24 +111,36 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                         screenWidth: screenWidth,
                         buttonLabel: _loading ? "جار التحميل..." : "تسجيل الدخول".tr(args: ["تسجيل الدخول"]),
                         onPressed: () async {
-                          if (formkey.currentState!.validate()) {
-                            formkey.currentState!.save();
-                            setState(() { _loading = true; });
-                            try {
-                              await FirebaseAuth.instance.signInWithEmailAndPassword(
-                                email: phoneNum,
-                                password: password,
-                              );
-                              Navigator.pushReplacementNamed(context, HomeView.id);
-                            } catch (e) {
-                              setState(() { _loading = false; });
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text("خطأ: $e"),
-                                  backgroundColor: Colors.red,
-                                ),
-                              );
-                            }
+                          if (_loading) return;
+                          if (!formkey.currentState!.validate()) return;
+
+                          formkey.currentState!.save();
+                          setState(() { _loading = true; });
+                          try {
+                            await FirebaseAuth.instance.signInWithEmailAndPassword(
+                              email: email,
+                              password: password,
+                            );
+                            if (!mounted) return;
+                            Navigator.pushReplacementNamed(context, HomeView.id);
+                          } on FirebaseAuthException catch (error) {
+                            if (!mounted) return;
+                            setState(() { _loading = false; });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('فشل تسجيل الدخول: ${error.message ?? error.code}'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          } catch (error) {
+                            if (!mounted) return;
+                            setState(() { _loading = false; });
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('حدث خطأ: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
                           }
                         },
                         buttonRatio: 0.6,
