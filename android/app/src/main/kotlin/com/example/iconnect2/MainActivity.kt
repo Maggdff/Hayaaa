@@ -1,6 +1,5 @@
-package com.example.iconnect2
+package com.egycode.hayaa
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity() {
-}
+class MainActivity: FlutterActivity()
