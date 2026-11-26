@@ -58,14 +58,20 @@ class _MyApp extends State<MyApp>with WidgetsBindingObserver{
     super.dispose();
   }
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
     final uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return;
-    final userDoc = FirebaseFirestore.instance.collection("user").doc(uid);
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.inactive) {
-      userDoc.update({"seen": FieldValue.serverTimestamp()});
-    } else if (state == AppLifecycleState.resumed) {
-      userDoc.update({"seen": "online"});
+
+    final userDoc = FirebaseFirestore.instance.collection('user').doc(uid);
+    try {
+      if (state == AppLifecycleState.paused ||
+          state == AppLifecycleState.inactive) {
+        await userDoc.update({'seen': FieldValue.serverTimestamp()});
+      } else if (state == AppLifecycleState.resumed) {
+        await userDoc.update({'seen': 'online'});
+      }
+    } catch (error) {
+      debugPrint('Could not update user presence: $error');
     }
   }
   @override
