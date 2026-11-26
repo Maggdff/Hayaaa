@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:country_picker/country_picker.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl_phone_field/country_picker_dialog.dart';
 import 'package:intl_phone_field/intl_phone_field.dart';
@@ -287,8 +288,21 @@ class _SignupViewBody extends State<SignupViewBody>{
                              screenWidth: screenWidth,
                              buttonLabel: "تاكيد رقم الهاتف".tr(args: ["تاكيد رقم الهاتف"]),
                              onPressed: () {
+                               if (FirebaseAuth.instance.currentUser == null) {
+                                 ScaffoldMessenger.of(context).showSnackBar(
+                                   const SnackBar(
+                                     content: Text(
+                                       'تسجيل رقم الهاتف غير مكتمل حالياً. استخدم تسجيل الدخول بحساب Google.',
+                                     ),
+                                   ),
+                                 );
+                                 return;
+                               }
+
                                Navigator.pushReplacementNamed(
-                                   context, HomeView.id);
+                                 context,
+                                 HomeView.id,
+                               );
                              },
                              buttonRatio: 0.6),
                          const SizedBox(
