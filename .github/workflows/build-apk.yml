@@ -31,6 +31,24 @@ jobs:
             echo "$GOOGLE_SERVICES_JSON" > android/app/google-services.json
           fi
 
+      - name: Verify Firebase Android configuration
+        run: |
+          python3 - <<'PY'
+          import json
+          with open("android/app/google-services.json", encoding="utf-8") as f:
+              config = json.load(f)
+          project_id = config.get("project_info", {}).get("project_id")
+          packages = {
+              client.get("client_info", {}).get("android_client_info", {}).get("package_name")
+              for client in config.get("client", [])
+          }
+          if project_id != "voice-up-84ee1":
+              raise SystemExit(f"Wrong Firebase project: {project_id!r}")
+          if "com.egycode.hayaa" not in packages:
+              raise SystemExit("Firebase config does not contain com.egycode.hayaa")
+          print("Firebase project and Android package verified.")
+          PY
+
       - name: Update Gradle wrapper to 8.3
         run: |
           sed -i 's#distributionUrl=.*#distributionUrl=https\\://services.gradle.org/distributions/gradle-8.3-all.zip#' android/gradle/wrapper/gradle-wrapper.properties
