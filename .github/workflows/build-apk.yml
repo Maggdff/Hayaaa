@@ -68,6 +68,26 @@ jobs:
               raise SystemExit("Firebase config does not contain com.egycode.hayaa")
           print("Firebase project and Android package verified.")
           PY
+          ACTUAL_SHA1=$(keytool -list -v -keystore "$HOME/.android/debug.keystore" -alias androiddebugkey -storepass android | awk -F': ' '/SHA1:/{print $2}' | tr -d ':' | tr '[:upper:]' '[:lower:]')
+          EXPECTED_SHA1=$(python3 - <<'PY'
+          import json
+          with open("android/app/google-services.json", encoding="utf-8") as f:
+              config = json.load(f)
+          for client in config.get("client", []):
+              if client.get("client_info", {}).get("android_client_info", {}).get("package_name") == "com.egycode.hayaa":
+                  for oauth in client.get("oauth_client", []):
+                      info = oauth.get("android_info", {})
+                      if info.get("package_name") == "com.egycode.hayaa":
+                          print(info.get("certificate_hash", "").replace(":", "").lower())
+                          raise SystemExit
+          PY
+          )
+          echo "Build signing SHA-1: $ACTUAL_SHA1"
+          if [ "$ACTUAL_SHA1" != "$EXPECTED_SHA1" ]; then
+            echo "::warning::Build signing SHA-1 does not match Firebase Google OAuth SHA-1. Google sign-in may fail until the matching keystore is configured."
+          else
+            echo "Build signing SHA-1 matches Firebase."
+          fi
 
       - name: Update Gradle wrapper to 8.3
         run: |
