@@ -55,8 +55,9 @@ jobs:
                                  lambda x: x.group(1) + '\n    namespace "' + m.group(1) + '"',
                                  s, count=1)
 
-              # 2) align Java/Kotlin JVM target to 17 (appended last so it wins)
-              if "kotlin" in s and "JVM_TARGET_PATCH" not in s:
+              # 2) align Java/Kotlin JVM target to 17, only for plugins that really apply the Kotlin plugin
+              uses_kotlin = re.search(r"kotlin-android|org\.jetbrains\.kotlin\.android", s)
+              if uses_kotlin and "JVM_TARGET_PATCH" not in s:
                   s += '''
           // JVM_TARGET_PATCH
           android {
