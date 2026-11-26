@@ -9,12 +9,8 @@ import 'package:hayaa_main/features/setting/views/setting_view.dart';
 import '../../features/Badges/views/badges_center.dart';
 import '../../features/agencies/views/agency_agent_view.dart';
 import '../../features/agencies/views/agency_host_view.dart';
-import '../../features/auth/choice between registration and login/views/choice_between_registration_and_login_view.dart';
 import '../../features/auth/choice between registration and login/views/privacy_terms_view.dart';
 import '../../features/auth/choice between registration and login/views/user_agreement_view.dart';
-import '../../features/auth/login/views/login_view.dart';
-import '../../features/auth/login/views/password_recovery.dart';
-import '../../features/auth/sinup/view/signup_view.dart';
 import '../../features/chat/group/view/create_family_view.dart';
 import '../../features/chat/group/view/family_view.dart';
 import '../../features/chat/one_to_one/view/chat_view.dart';
@@ -41,12 +37,8 @@ import '../../features/user_leve/view/user_level_view.dart';
 
 Map<String, Widget Function(BuildContext)> appRoutes = {
   SplashView.id: (context) => const SplashView(),
-  ChoiceBetweenRegistrationAndLogin.id: (context) =>
-      const ChoiceBetweenRegistrationAndLogin(),
   UserAgreementView.id: (context) => const UserAgreementView(),
   PrivacyTermsView.id: (context) => const PrivacyTermsView(),
-  LoginView.id: (context) => const LoginView(),
-  PasswordRecoveryView.id: (context) => const PasswordRecoveryView(),
   RechargeView.id:(context) => const RechargeView(),
   HistoryRechargeView.id:(context) => const HistoryRechargeView(),
   ChatView.id:(context) => const ChatView(),
@@ -60,7 +52,6 @@ Map<String, Widget Function(BuildContext)> appRoutes = {
   VisitorView.id:(context)=>const VisitorView(),
   ProfileEditView.id:(context)=>const ProfileEditView(),
   SaleryView.id:(context)=>const SaleryView(),
-  SignupView.id:(context)=>const SignupView(),
   SettingView.id:(context)=> SettingView(),
   SearchView.id:(context)=>SearchView(),
   FriendReuest.id:(context)=>FriendReuest(),
