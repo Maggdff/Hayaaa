@@ -1218,9 +1218,11 @@ class _RoomViewBody extends State<RoomViewBody> {
       clipBehavior: Clip.none,
       children: [
         // Speaking ripple ring (driven by Zego sound level)
-        ValueListenableBuilder<double>(
-          valueListenable: ZegoUIKit().getSoundLevelNotifier(user.id),
-          builder: (context, level, _) {
+        StreamBuilder<double>(
+          stream: user.soundLevel,
+          initialData: 0,
+          builder: (context, snapshot) {
+            final level = snapshot.data ?? 0;
             final bool speaking = level > 10;
             return AnimatedContainer(
               duration: const Duration(milliseconds: 150),
@@ -1738,7 +1740,9 @@ class _RoomViewBody extends State<RoomViewBody> {
               controller.media.pickPureAudioFile().then((value) {
                 Navigator.pop(context);
                 for (var f in value) {
-                  musicPath.add(f.path);
+                  final p = f.path;
+                  if (p == null) continue;
+                  musicPath.add(p);
                   musicname.add(f.name);
                 }
                 showModalBottomSheet(
@@ -1756,7 +1760,6 @@ class _RoomViewBody extends State<RoomViewBody> {
       ],
     );
   }
-
   Widget _buildWallpaperButton() {
     return Column(
       mainAxisSize: MainAxisSize.min,
