@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -84,8 +86,18 @@ class AuthServiceGoogle {
 
       return userCredential;
     } catch (error, stackTrace) {
-      print('Google sign-in failed: $error');
-      print(stackTrace);
+      debugPrint('Google sign-in failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+
+      // Do not leave an authenticated session behind if profile setup failed.
+      try {
+        if (_auth.currentUser != null) {
+          await _auth.signOut();
+        }
+      } catch (signOutError) {
+        debugPrint('Could not clear incomplete Google session: $signOutError');
+      }
+
       rethrow;
     }
   }
