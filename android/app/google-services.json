@@ -1,20 +1,21 @@
 {
   "project_info": {
-    "project_number": "400556879718",
-    "project_id": "moseba-162b4",
-    "storage_bucket": "moseba-162b4.firebasestorage.app"
+    "project_number": "764523988239",
+    "firebase_url": "https://voice-up-84ee1-default-rtdb.firebaseio.com",
+    "project_id": "voice-up-84ee1",
+    "storage_bucket": "voice-up-84ee1.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:400556879718:android:6f23893e79510d6fd422a7",
+        "mobilesdk_app_id": "1:764523988239:android:5d7024bf01a4fe80f56a7a",
         "android_client_info": {
           "package_name": "com.egycode.hayaa"
         }
       },
       "oauth_client": [
         {
-          "client_id": "400556879718-lcljsneng8stvn8g6sevrmlph76jf4cr.apps.googleusercontent.com",
+          "client_id": "764523988239-rdhlbiueobmhd35ssb2mav2rar71t19v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.egycode.hayaa",
@@ -22,20 +23,57 @@
           }
         },
         {
-          "client_id": "400556879718-1v1en3aap3njmr4h4dkmdt7e7cv6rn00.apps.googleusercontent.com",
+          "client_id": "764523988239-52tdnapcgo0obnu38e01h0k8vrgbgn2c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBtMxJAx48q9XO5Q4jr-JalVlALw_FM5WA"
+          "current_key": "AIzaSyDk5OT5vHbSZVUoY2Mnp6VRfxsgxR8e9nI"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "400556879718-1v1en3aap3njmr4h4dkmdt7e7cv6rn00.apps.googleusercontent.com",
+              "client_id": "764523988239-52tdnapcgo0obnu38e01h0k8vrgbgn2c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764523988239:android:2c52fc3ba0485f34f56a7a",
+        "android_client_info": {
+          "package_name": "com.voiceup.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764523988239-nkb8i5cgqqr27vuru1iuojh14fkr90ng.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.voiceup.app",
+            "certificate_hash": "565750d622052ccc1f55f3bc572b6dcaf2063ef4"
+          }
+        },
+        {
+          "client_id": "764523988239-52tdnapcgo0obnu38e01h0k8vrgbgn2c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDk5OT5vHbSZVUoY2Mnp6VRfxsgxR8e9nI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764523988239-52tdnapcgo0obnu38e01h0k8vrgbgn2c.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
