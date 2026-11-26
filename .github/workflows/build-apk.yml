@@ -10,6 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
     steps:
       - uses: actions/checkout@v4
 
@@ -83,7 +84,8 @@ jobs:
             grep -n "bigLargeIcon" "$x"
           done
 
-      - run: flutter build apk --release
+      - name: Build release APK
+        run: flutter build apk --release --dart-define=SUPABASE_ANON_KEY="$SUPABASE_ANON_KEY"
 
       - uses: actions/upload-artifact@v4
         with:
