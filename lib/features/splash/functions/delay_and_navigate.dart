@@ -5,6 +5,7 @@ import '../../auth/choice between registration and login/views/choice_between_re
 
 void delayAndNavigate(BuildContext context) {
   Future.delayed(const Duration(seconds: 4)).then((value) {
+    if (!context.mounted) return;
     final FirebaseAuth auth = FirebaseAuth.instance;
     if (auth.currentUser != null) {
       Navigator.pushReplacementNamed(context, HomeView.id);
