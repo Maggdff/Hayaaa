@@ -9,6 +9,9 @@ class CustomTextFormField extends StatefulWidget {
     required this.fieldIcon,
     required this.autovalidateMode,
     this.onSaved,
+    this.validator,
+    this.obscureText = false,
+    this.keyboardType,
   });
 
   final double screenWidth;
@@ -19,6 +22,9 @@ class CustomTextFormField extends StatefulWidget {
 
   final AutovalidateMode autovalidateMode;
   final void Function(String?)? onSaved;
+  final String? Function(String?)? validator;
+  final bool obscureText;
+  final TextInputType? keyboardType;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -31,6 +37,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       width: widget.screenWidth * widget.fielldRatio,
       child: TextFormField(
         onSaved: widget.onSaved,
+        validator: widget.validator,
+        obscureText: widget.obscureText,
+        keyboardType: widget.keyboardType,
         autovalidateMode: widget.autovalidateMode,
         decoration: InputDecoration(
           suffixIcon: widget.fieldIcon,
