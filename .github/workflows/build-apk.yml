@@ -15,6 +15,7 @@ jobs:
     env:
       GOOGLE_SERVICES_JSON: ${{ secrets.GOOGLE_SERVICES_JSON }}
       SUPABASE_PUBLISHABLE_KEY: ${{ secrets.SUPABASE_PUBLISHABLE_KEY }}
+      ANDROID_DEBUG_KEYSTORE_BASE64: ${{ secrets.ANDROID_DEBUG_KEYSTORE_BASE64 }}
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +24,21 @@ jobs:
           distribution: temurin
           java-version: "17"
 
+      - name: Configure and report Android signing certificate
+        run: |
+          mkdir -p "$HOME/.android"
+          if [ -n "$ANDROID_DEBUG_KEYSTORE_BASE64" ]; then
+            printf '%s' "$ANDROID_DEBUG_KEYSTORE_BASE64" | base64 --decode > "$HOME/.android/debug.keystore"
+          fi
+          if [ ! -f "$HOME/.android/debug.keystore" ]; then
+            keytool -genkeypair -v \
+              -keystore "$HOME/.android/debug.keystore" \
+              -storepass android -alias androiddebugkey -keypass android \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+          keytool -list -v -keystore "$HOME/.android/debug.keystore" \
+            -alias androiddebugkey -storepass android | grep -E "SHA1:|SHA256:"
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
