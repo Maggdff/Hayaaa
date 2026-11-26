@@ -46,3 +46,14 @@ Before you begin, ensure you have the following installed:
    ```bash
    git clone [https://github.com/your-username/hayaa-app.git](https://github.com/your-username/hayaa-app.git)
    cd hayaa-app
+
+
+## GitHub Actions build configuration
+
+The Android APK workflow uses these repository Actions secrets when the related feature is enabled:
+
+- `SUPABASE_PUBLISHABLE_KEY`: the public publishable key from Supabase **Settings → API Keys**. Never use a Supabase `service_role` or secret key in the app.
+- `ANDROID_DEBUG_KEYSTORE_BASE64`: optional Base64 content of the stable Android debug keystore used for the current test build. Supplying the same keystore on every build keeps the signing SHA-1 stable for Google Sign-In. Without it, GitHub Actions generates a temporary key and Google Sign-In may fail because its SHA-1 changes.
+- `GOOGLE_SERVICES_JSON`: optional complete Firebase Android configuration JSON. If omitted, the checked-in `android/app/google-services.json` is used. The workflow verifies project `voice-up-84ee1` and package `com.egycode.hayaa`.
+
+Add secrets under **Settings → Secrets and variables → Actions** in the GitHub repository. The current release build is still signed with the Android debug signing configuration and is intended for testing, not Play Store publishing.
