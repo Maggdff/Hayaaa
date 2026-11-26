@@ -37,25 +37,41 @@ jobs:
 
       - run: flutter pub get
 
-      - name: Patch plugins missing namespace
+      - name: Patch plugins (namespace + JVM target)
         run: |
           python3 - <<'PY'
           import re, glob, os
           root = os.environ.get("PUB_CACHE", os.path.expanduser("~/.pub-cache"))
           for gf in glob.glob(root + "/hosted/*/*/android/build.gradle"):
               s = open(gf).read()
-              if "namespace" in s:
-                  continue
+              orig = s
               mf = os.path.join(os.path.dirname(gf), "src/main/AndroidManifest.xml")
-              if not os.path.exists(mf):
-                  continue
-              m = re.search(r'package="([^"]+)"', open(mf).read())
-              if not m:
-                  continue
-              s2 = re.sub(r"(\nandroid\s*\{)", lambda x: x.group(1) + '\n    namespace "' + m.group(1) + '"', s, count=1)
-              if s2 != s:
-                  open(gf, "w").write(s2)
-                  print("patched", gf, m.group(1))
+
+              # 1) add namespace if missing
+              if "namespace" not in s and os.path.exists(mf):
+                  m = re.search(r'package="([^"]+)"', open(mf).read())
+                  if m:
+                      s = re.sub(r"(\nandroid\s*\{)",
+                                 lambda x: x.group(1) + '\n    namespace "' + m.group(1) + '"',
+                                 s, count=1)
+
+              # 2) align Java/Kotlin JVM target to 17 (appended last so it wins)
+              if "kotlin" in s and "JVM_TARGET_PATCH" not in s:
+                  s += '''
+          // JVM_TARGET_PATCH
+          android {
+              compileOptions {
+                  sourceCompatibility JavaVersion.VERSION_17
+                  targetCompatibility JavaVersion.VERSION_17
+              }
+              kotlinOptions {
+                  jvmTarget = "17"
+              }
+          }
+          '''
+              if s != orig:
+                  open(gf, "w").write(s)
+                  print("patched", gf)
           PY
 
       - run: flutter build apk --release
