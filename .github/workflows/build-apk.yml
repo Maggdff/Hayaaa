@@ -84,6 +84,10 @@ jobs:
           )
           echo "Build signing SHA-1: $ACTUAL_SHA1"
           if [ "$ACTUAL_SHA1" != "$EXPECTED_SHA1" ]; then
+            if [ -n "$ANDROID_DEBUG_KEYSTORE_BASE64" ]; then
+              echo "::error::The configured stable signing key does not match Firebase Google OAuth SHA-1."
+              exit 1
+            fi
             echo "::warning::Build signing SHA-1 does not match Firebase Google OAuth SHA-1. Google sign-in may fail until the matching keystore is configured."
           else
             echo "Build signing SHA-1 matches Firebase."
