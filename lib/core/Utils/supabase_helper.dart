@@ -6,7 +6,7 @@ class SupabaseHelper {
   static const String supabaseUrl =
       'https://hmnzovknjzzuyudpyrnu.supabase.co';
 
-  // Supply the public anon key at build time. Never place a service_role key
+  // Supply the public publishable key at build time. Never place a service_role key
   // in a mobile application: APK contents can be extracted by anyone.
   static const String supabaseKey =
       String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
@@ -72,7 +72,6 @@ class SupabaseHelper {
       deleteUri,
       headers: {
         'apikey': supabaseKey,
-        'Authorization': 'Bearer $supabaseKey',
       },
     );
 
