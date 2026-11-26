@@ -14,7 +14,10 @@ class AuthServiceGoogle {
   Future<UserCredential?> signInWithGoogle() async {
     var firebaseSignInCompleted = false;
     try {
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await GoogleSignIn(
+        serverClientId:
+            '764523988239-52tdnapcgo0obnu38e01h0k8vrgbgn2c.apps.googleusercontent.com',
+      ).signIn();
 
       // The user cancelled the Google account picker.
       if (googleUser == null) return null;
