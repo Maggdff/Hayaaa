@@ -75,8 +75,23 @@ class ChoiceBetweenRegistrationAndLoginBody extends StatelessWidget {
                       screenWidth: screenWidth,
                       socialLogo: AppImages.googlePLogo,
                       onTap: () async {
-                        await AuthServiceGoogle().signInWithGoogle();
-                        Navigator.popAndPushNamed(context, HomeView.id);
+                        try {
+                          final result =
+                              await AuthServiceGoogle().signInWithGoogle();
+
+                          if (!context.mounted || result?.user == null) return;
+
+                          Navigator.popAndPushNamed(context, HomeView.id);
+                        } catch (error) {
+                          if (!context.mounted) return;
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text('فشل تسجيل الدخول: $error'),
+                              duration: const Duration(seconds: 6),
+                            ),
+                          );
+                        }
                       }),
                   const SizedBox(
                     height: 10,
