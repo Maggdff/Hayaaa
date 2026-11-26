@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "764523988239-j6t3ldemsjlcimgapdd5tev7fohefbgr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.egycode.hayaa",
+            "certificate_hash": "d1b3820a3561b8e131d5e245698264ab5cac20b2"
+          }
+        },
+        {
           "client_id": "764523988239-rdhlbiueobmhd35ssb2mav2rar71t19v.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
